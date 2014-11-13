@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Keyword arguments and Parallel assignment</title>
+    <meta content="" name="description" />
+    <meta content="" name="author" />
+    <link href="css/reveal.css" rel="stylesheet" />
+    <link href="css/simple.css" rel="stylesheet" />
+    <link href="css/googlecode.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides"><section class="center" data-background="#FF0000">
+  <h2 class="white">
+    KWARGS
+  </h2>
+</section>
+<section class="center" data-background="#0000FF">
+  <h2 class="white">
+    Parallel assignment
+  </h2>
+</section>
+<section class="center" data-background="#000">
+  <h2 class="white">
+    Questions
+  </h2>
+</section>
+<section class="center">
+  <pre><code class="ruby" contenteditable="true">PI = 3.14
+
+module X
+  PI = 23
+end
+
+module X::Y
+  p PI
+end </code></pre>
+</section>
+<section class="center">
+  <pre><code class="ruby" contenteditable="true">PI = 3.14
+
+module X
+  PI = 23
+end
+
+module X:Y
+  p PI
+end </code></pre>
+</section>
+<section class="center">
+  <img class="inline" src="img/troll.png" />
+</section>
+<section class="center">
+  <pre><code class="ruby" contenteditable="true">(2..Float::INFINITY).first(100).select(&:prime?) </code></pre>
+</section>
+<section class="center">
+  <pre><code class="ruby" contenteditable="true">(2..Float::INFINITY).lazy.map { |number| number ** 2 }.select(&:odd?).to_a </code></pre>
+</section>
+<section class="center">
+  <pre><code class="ruby" contenteditable="true">(2..Float::INFINITY).lazy.map { |number| number ** 2 }.select(&:odd?).first(1000) </code></pre>
+</section>
+<section class="center" data-background="#FF0000">
+  <h2 class="white">
+    Keyword arguments
+  </h2>
+</section>
+<section>
+  <h2>
+    KWARGS < 1.9
+  </h2>
+  <p>
+    Using hashes for keyword arguments
+  </p>
+  <pre><code class="ruby" contenteditable="true">def order(drink, preferences)
+  # ...
+end
+
+order('Latte', {:size => 'grande', :syrup => 'hazelnut'})
+order 'Latte', {:size => 'grande', :syrup => 'hazelnut'}
+order 'Latte', :size => 'grande', :syrup => 'hazelnut' </code></pre>
+</section>
+<section>
+  <h2>
+    KWARGS 1.9
+  </h2>
+  <p>
+    Better syntax for hash with keys that are symbols
+  </p>
+  <pre><code class="ruby" contenteditable="true">def order(drink, preferences)
+  # ...
+end
+
+order 'Latte', size: 'grande', syrup: 'hazelnut' </code></pre>
+</section>
+<section>
+  <h2>
+    KWARGS 1.9
+  </h2>
+  <p>
+    Optional keyword arguments
+  </p>
+  <pre><code class="ruby" contenteditable="true">def order(drink, preferences = {})
+  # ...
+end
+
+order 'Latte'
+order 'Latte', size: 'grande', syrup: 'hazelnut' </code></pre>
+</section>
+<section>
+  <h2>
+    KWARGS 1.9
+  </h2>
+  <p>
+    Default values
+  </p>
+  <pre><code class="ruby" contenteditable="true">def order(drink, preferences = {})
+  preferences = {size: 'grande', syrup: 'hazelnut'}.merge(preferences)
+  # ...
+end
+
+order 'Latte', filling: 'chocolate' </code></pre>
+</section>
+<section>
+  <h2>
+    KWARGS 2.0.0
+  </h2>
+  <p>
+    Real keyword arguments!
+  </p>
+  <pre><code class="ruby" contenteditable="true">def foo(bar: 'default')
+  puts bar
+end
+
+foo              # 'default'
+foo(bar: 'baz')  # 'baz' </code></pre>
+</section>
+<section>
+  <h2>
+    KWARGS 2.0.0
+  </h2>
+  <p>
+    Cannot drop the default value...
+  </p>
+  <pre><code class="ruby" contenteditable="true">def order(drink, size: 'small', syrup: nil)
+  # ...
+end
+
+order 'Latte', size: 'grande', syrup: 'hazelnut'
+order 'Latte', syrup: 'hazelnut', size: 'grande'
+order 'Latte', syrup: 'hazelnut' </code></pre>
+</section>
+<section>
+  <h2>
+    KWARGS 2.0.0
+  </h2>
+  <p>
+    Cannot declare the argument as required...
+  </p>
+  <pre><code class="ruby" contenteditable="true">def order(drink, size: 'small', syrup: -> { raise 'syrup is required' }.call)
+  # ...
+end </code></pre>
+</section>
+<section class="center">
+  <img class="inline" src="img/wtf.png" />
+</section>
+<section>
+  <h2>
+    KWARGS 2.1
+  </h2>
+  <p>
+    Keyword arguments can be declared without providing a default value
+  </p>
+  <pre><code class="ruby" contenteditable="true">def order(drink, size:, syrup: 'hazelnut')
+  # ...
+end
+
+order 'Latte', size: 'grande' </code></pre>
+</section>
+<section>
+  <h2>
+    KWARGS 2.1
+  </h2>
+  <p>
+    They act as positional arguments
+  </p>
+  <pre><code class="ruby" contenteditable="true">def foo(bar:)
+  puts bar
+end
+
+foo              # ArgumentError: missing keyword: bar
+foo(bar: 'baz')  # 'baz' </code></pre>
+</section>
+<section class="center" data-background="#0000FF">
+  <h2 class="white">
+    Parallel assignment
+  </h2>
+</section>
+<section>
+  <h2>
+    Parallel assignment
+  </h2>
+  <p>
+    You can assign values to names at the same time
+  </p>
+  <pre><code class="ruby" contenteditable="true">x, y = 1, 2
+x, y = y, x </code></pre>
+</section>
+<section>
+  <h2>
+    Parallel assignment
+  </h2>
+  <p>
+    Unpacks the list on the right assigning values to the names on the left
+  </p>
+  <pre><code class="ruby" contenteditable="true">x, y = [1, 2, 3]
+x, y = 1, 2, 3 </code></pre>
+</section>
+<section>
+  <h2>
+    Parallel assignment
+  </h2>
+  <p>
+    The splat argument collects zero or more values
+  </p>
+  <pre><code class="ruby" contenteditable="true">first, *middle, last = 1, 2, 3, 4
+first, *middle, last = 1, *[2, 3, 4] </code></pre>
+</section>
+<section>
+  <h2>
+    Parallel assignment
+  </h2>
+  <p>
+    You can use parenthesis to denote nesting when assigning values
+  </p>
+  <pre><code class="ruby" contenteditable="true">head, (title, body) = [1, [2, 3]]
+head, (title, *sentences) = 1, [2, 3, 4, 5, 6] </code></pre>
+</section>
+<section>
+  <h2>
+    Parallel assignment
+  </h2>
+  <p>
+    Order of execution
+  </p>
+  <pre><code class="ruby" contenteditable="true">x = 0
+a, b, c = x, (x += 1), (x += 1)
+x # 2
+a # 0
+b # 1
+c # 2 </code></pre>
+</section>
+<section>
+  <h2>
+    Parallel assignment
+  </h2>
+  <p>
+    Using it with blocks
+  </p>
+  <pre><code class="ruby" contenteditable="true">[[1, [2, 3]], [4, [5, 6]], [7, [8, 9]]].each do |a, (b, c)|
+  puts a
+  puts b
+  puts c
+end </code></pre>
+</section>
+      </div>
+    </div>
+    <script src="js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+    <script type="text/javascript">
+      Reveal.initialize({
+        width:  '100%',
+        height: '100%',
+        margin: 0.05,
+        controls: false,
+        progress: false,
+        history: true,
+        center: false,
+        rollingLinks: true,
+        transition: 'none',
+        backgroundTransition: 'none',
+        dependencies: [
+          {
+            src: 'js/highlight.js',
+            async: true,
+            callback: function() {
+              hljs.configure({ languages: ['ruby'] });
+              hljs.initHighlightingOnLoad();
+            }
+          }
+        ]
+      });
+    </script>
+  </body>
+</html>

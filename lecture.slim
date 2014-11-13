@@ -1,0 +1,221 @@
+section.center data-background="#FF0000"
+  h2.white KWARGS
+
+section.center data-background="#0000FF"
+  h2.white Parallel assignment
+
+section.center data-background="#000"
+  h2.white Questions
+
+section.center
+  pre: code.ruby contenteditable="true"
+    '
+      PI = 3.14
+
+      module X
+        PI = 23
+      end
+
+      module X::Y
+        p PI
+      end
+
+section.center
+  pre: code.ruby contenteditable="true"
+    '
+      PI = 3.14
+
+      module X
+        PI = 23
+      end
+
+      module X:Y
+        p PI
+      end
+
+section.center
+  img.inline src="img/troll.png"
+
+section.center
+  pre: code.ruby contenteditable="true"
+    '
+      (2..Float::INFINITY).first(100).select(&:prime?)
+
+section.center
+  pre: code.ruby contenteditable="true"
+    '
+      (2..Float::INFINITY).lazy.map { |number| number ** 2 }.select(&:odd?).to_a
+
+section.center
+  pre: code.ruby contenteditable="true"
+    '
+      (2..Float::INFINITY).lazy.map { |number| number ** 2 }.select(&:odd?).first(1000)
+
+section.center data-background="#FF0000"
+  h2.white Keyword arguments
+
+section
+  h2 KWARGS < 1.9
+  p Using hashes for keyword arguments
+  pre: code.ruby contenteditable="true"
+    '
+      def order(drink, preferences)
+        # ...
+      end
+
+      order('Latte', {:size => 'grande', :syrup => 'hazelnut'})
+      order 'Latte', {:size => 'grande', :syrup => 'hazelnut'}
+      order 'Latte', :size => 'grande', :syrup => 'hazelnut'
+
+section
+  h2 KWARGS 1.9
+  p Better syntax for hash with keys that are symbols
+  pre: code.ruby contenteditable="true"
+    '
+      def order(drink, preferences)
+        # ...
+      end
+
+      order 'Latte', size: 'grande', syrup: 'hazelnut'
+
+section
+  h2 KWARGS 1.9
+  p Optional keyword arguments
+  pre: code.ruby contenteditable="true"
+    '
+      def order(drink, preferences = {})
+        # ...
+      end
+
+      order 'Latte'
+      order 'Latte', size: 'grande', syrup: 'hazelnut'
+
+section
+  h2 KWARGS 1.9
+  p Default values
+  pre: code.ruby contenteditable="true"
+    '
+      def order(drink, preferences = {})
+        preferences = {size: 'grande', syrup: 'hazelnut'}.merge(preferences)
+        # ...
+      end
+
+      order 'Latte', filling: 'chocolate'
+
+section
+  h2 KWARGS 2.0.0
+  p Real keyword arguments!
+  pre: code.ruby contenteditable="true"
+    '
+      def foo(bar: 'default')
+        puts bar
+      end
+
+      foo              # 'default'
+      foo(bar: 'baz')  # 'baz'
+
+section
+  h2 KWARGS 2.0.0
+  p Cannot drop the default value...
+  pre: code.ruby contenteditable="true"
+    '
+      def order(drink, size: 'small', syrup: nil)
+        # ...
+      end
+
+      order 'Latte', size: 'grande', syrup: 'hazelnut'
+      order 'Latte', syrup: 'hazelnut', size: 'grande'
+      order 'Latte', syrup: 'hazelnut'
+
+section
+  h2 KWARGS 2.0.0
+  p Cannot declare the argument as required...
+  pre: code.ruby contenteditable="true"
+    '
+      def order(drink, size: 'small', syrup: -> { raise 'syrup is required' }.call)
+        # ...
+      end
+
+section.center
+  img.inline src="img/wtf.png"
+
+section
+  h2 KWARGS 2.1
+  p Keyword arguments can be declared without providing a default value
+  pre: code.ruby contenteditable="true"
+    '
+      def order(drink, size:, syrup: 'hazelnut')
+        # ...
+      end
+
+      order 'Latte', size: 'grande'
+
+section
+  h2 KWARGS 2.1
+  p They act as positional arguments
+  pre: code.ruby contenteditable="true"
+    '
+      def foo(bar:)
+        puts bar
+      end
+
+      foo              # ArgumentError: missing keyword: bar
+      foo(bar: 'baz')  # 'baz'
+
+section.center data-background="#0000FF"
+  h2.white Parallel assignment
+
+section
+  h2 Parallel assignment
+  p You can assign values to names at the same time
+  pre: code.ruby contenteditable="true"
+    '
+      x, y = 1, 2
+      x, y = y, x
+
+section
+  h2 Parallel assignment
+  p Unpacks the list on the right assigning values to the names on the left
+  pre: code.ruby contenteditable="true"
+    '
+      x, y = [1, 2, 3]
+      x, y = 1, 2, 3
+
+section
+  h2 Parallel assignment
+  p The splat argument collects zero or more values
+  pre: code.ruby contenteditable="true"
+    '
+      first, *middle, last = 1, 2, 3, 4
+      first, *middle, last = 1, *[2, 3, 4]
+
+section
+  h2 Parallel assignment
+  p You can use parenthesis to denote nesting when assigning values
+  pre: code.ruby contenteditable="true"
+    '
+      head, (title, body) = [1, [2, 3]]
+      head, (title, *sentences) = 1, [2, 3, 4, 5, 6]
+
+section
+  h2 Parallel assignment
+  p Order of execution
+  pre: code.ruby contenteditable="true"
+    '
+      x = 0
+      a, b, c = x, (x += 1), (x += 1)
+      x # 2
+      a # 0
+      b # 1
+      c # 2
+
+section
+  h2 Parallel assignment
+  p Using it with blocks
+  pre: code.ruby contenteditable="true"
+    '
+      [[1, [2, 3]], [4, [5, 6]], [7, [8, 9]]].each do |a, (b, c)|
+        puts a
+        puts b
+        puts c
+      end
